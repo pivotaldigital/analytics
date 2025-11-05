@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Event/etc/events.xsd">
+    <event name="checkout_cart_add_product_complete">
+        <observer name="pivotal_analytic_cart_add_product" instance="Pivotal\Analytics\Observer\Checkout\Cart\Add" />
+    </event>
+    <event name="controller_action_predispatch_checkout_cart_index">
+        <observer name="pivotal_analytic_cart_index_dispatch" instance="Pivotal\Analytics\Observer\Checkout\Cart\Index" />
+    </event>
+    <event name="checkout_onepage_controller_success_action">
+        <observer name="pivotal_analytic_order_success_action" instance="Pivotal\Analytics\Observer\Checkout\Order\Success" />
+    </event>
+</config>

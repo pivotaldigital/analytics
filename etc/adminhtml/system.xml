@@ -1,0 +1,41 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+    <system>
+        <section id="pivotal_analytics" translate="label" type="text" sortOrder="8888" showInDefault="1" showInWebsite="1" showInStore="1">
+            <label>Pivotal Analytics</label>
+            <tab>general</tab>
+            <resource>Pivotal_Analytics::configuration</resource>
+            <group id="general" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>General Pivotal Analytics Configuration</label>
+                <field id="enabled" translate="label" type="select" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                    <label>Enable</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="site_key" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Site Key</label>
+                    <validate>required-entry no-whitespace</validate>
+                </field>
+                <field id="track_add_cart" translate="label comment" type="select" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Track Add to Cart Event</label>
+                    <source_model>Pivotal\Analytics\Model\Config\Mode</source_model>
+                </field>
+                <field id="track_view_cart" translate="label comment" type="select" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Track View Cart Event</label>
+                    <source_model>Pivotal\Analytics\Model\Config\Mode</source_model>
+                </field>
+                <field id="track_purchase" translate="label comment" type="select" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Track Purchase Event</label>
+                    <source_model>Pivotal\Analytics\Model\Config\Mode</source_model>
+                </field>
+                <field id="track_refund" translate="label comment" type="select" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Track Refund Event</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="track_cancellation" translate="label comment" type="select" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Track Cancellation Event</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+            </group>
+        </section>
+    </system>
+</config>

@@ -1,0 +1,20 @@
+{
+  "name": "pivotal/analytics",
+  "description": "Analytics module for Magento 2.",
+  "type": "magento2-module",
+  "version": "1.0.0",
+  "require": {
+    "php": "~8.1.0||~8.2.0||~8.3.0",
+    "magento/framework": "*"
+  },
+  "autoload": {
+    "files": [
+      "registration.php"
+    ],
+    "psr-4": {
+      "Pivotal\\Analytics\\": ""
+    }
+  },
+  "minimum-stability": "stable",
+  "prefer-stable": true
+}

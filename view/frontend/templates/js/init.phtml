@@ -1,0 +1,22 @@
+<?php
+/**
+ * Pivotal Analytics Init Script
+ *
+ * @category    Analytics
+ * @package     Pivotal_Analytics
+ * @author      Ankit Patel <ankit.patel@pivotal.digital>
+ */
+
+/* var $block \Pivotal\Analytics\Block\js */
+
+$functionItentifier = \Pivotal\Analytics\Helper\Data::PIVOTAL_ANALYTICS_FUNCTION_IDENTIFIER;
+?>
+
+<script>
+(function(p,v,t){
+p.pivotalQ=p.pivotalQ||[];
+var f=v.getElementsByTagName(t)[0],j=v.createElement(t);
+j.async=1;j.src='https://<?php echo $functionItentifier ?>.functions.supabase.co/pivotal-analytics?key=<?php echo $block->getSiteKey(); ?>&v=v4.1';
+f.parentNode.insertBefore(j,f);
+})(window,document,'script');
+</script>

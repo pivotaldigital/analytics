@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Event/etc/events.xsd">
+    <event name="sales_order_payment_refund">
+        <observer name="pivotal_analytic_order_payment_refund" instance="Pivotal\Analytics\Observer\Sales\Order\Refund" />
+    </event>
+    <event name="order_cancel_after">
+        <observer name="pivotal_analytic_order_cancel" instance="Pivotal\Analytics\Observer\Sales\Order\Cancel" />
+    </event>
+</config>
