@@ -41,15 +41,17 @@ composer require pivotal/analytics
    ```
 
 ## Usage Guidelines
-After installation, you can configure the Pivotal Analytics extension from the Magento admin panel. Navigate to `Stores > Configuration > Pivotal > Analytics` to set up your preferences.
+After installation, you can configure the Pivotal Analytics extension from the Magento admin panel. Navigate to `Stores > Configuration > General > Pivotal Analytics` to set up your preferences.
 
 ## Features
-- User behavior tracking
-- Sales data analysis
-- Custom report generation
+- Add to cart event tracking
+- View cart activity tracking
+- Purchase event tracking
+- Refund order event tracking
+- Order cancellation event tracking
 
 ## Support
 For any issues or feature requests, please open an issue in the repository or contact our support team.
 
 ## License
-This extension is licensed under the [Your License Here]. Please refer to the license file for more details.
+This extension is licensed under the Open Software License 3.0 (OSL-3.0).
