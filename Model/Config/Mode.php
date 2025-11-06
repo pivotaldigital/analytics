@@ -5,6 +5,11 @@ use Magento\Framework\Data\OptionSourceInterface;
 
 class Mode implements OptionSourceInterface
 {
+    /**
+     * Get config options
+     *
+     * @return void
+     */
     public function toOptionArray()
     {
         return [

@@ -32,7 +32,6 @@ class Cancel implements ObserverInterface
         $this->logger = $logger;
     }
 
-
     /**
      * Execute observer
      *
@@ -79,8 +78,13 @@ class Cancel implements ObserverInterface
      * @param string|null $originalPurchaseDate
      * @return void
      */
-    private function trackCancellation($orderId, $cancelledAmount, $cancellationReason, $cancelledItems = [], $originalPurchaseDate = null) 
-    {
+    private function trackCancellation(
+        $orderId,
+        $cancelledAmount,
+        $cancellationReason,
+        $cancelledItems = [],
+        $originalPurchaseDate = null
+    ): void {
         $sessionIds = $this->helper->getSessionIds();
 
         $data = [

@@ -55,7 +55,13 @@ class Success implements ObserverInterface
                     ];
                 }
 
-                $this->trackPurchase($order->getIncrementId(), $order->getGrandTotal(), $order->getCustomerEmail(), $orderItems, $order->getCreatedAt());
+                $this->trackPurchase(
+                    $order->getIncrementId(),
+                    $order->getGrandTotal(),
+                    $order->getCustomerEmail(),
+                    $orderItems,
+                    $order->getCreatedAt()
+                );
             }
         } catch (\Exception $e) {
             $this->logger->error('Error in Order Success observer: ' . $e->getMessage());
@@ -63,7 +69,7 @@ class Success implements ObserverInterface
     }
 
     /**
-     * handle purchase event for analytic tracking
+     * Handle purchase event for analytic tracking
      *
      * @param integer $orderId
      * @param float $orderTotal

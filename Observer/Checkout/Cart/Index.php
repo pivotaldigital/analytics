@@ -79,6 +79,14 @@ class Index implements ObserverInterface
         }
     }
 
+    /**
+     * Track View Cart event
+     *
+     * @param float $cartTotal
+     * @param int $itemCount
+     * @param array $items
+     * @return void
+     */
     private function trackViewCart($cartTotal, $itemCount, $items = [])
     {
         $sessionIds = $this->helper->getSessionIds();

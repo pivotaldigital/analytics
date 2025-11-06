@@ -2,7 +2,7 @@
 
 namespace Pivotal\Analytics\Logger;
 
-use Pivotal\Logger\Logger\Logger as PivotalLogger;
+use Monolog\Level;
 
 class Handler extends \Magento\Framework\Logger\Handler\Base
 {
@@ -10,10 +10,10 @@ class Handler extends \Magento\Framework\Logger\Handler\Base
      * Logging level
      * @var int
      */
-    protected $loggerType = PivotalLogger::INFO;
+    protected $loggerType = Level::Info;
 
     /**
-     * File name
+     * Log file name
      * @var string
      */
     protected $fileName = '/var/log/pivotal/analytics.log';

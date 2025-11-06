@@ -47,7 +47,12 @@ class Add implements ObserverInterface
                 $product = $event->getProduct();
                 $params = $event->getRequest()->getParams();
 
-                $this->trackAddToCart($product->getSku(), $product->getName(), $product->getFinalPrice(), $params['qty'] ?? 1);
+                $this->trackAddToCart(
+                    $product->getSku(),
+                    $product->getName(),
+                    $product->getFinalPrice(),
+                    $params['qty'] ?? 1
+                );
             }
         } catch (\Exception $e) {
             $this->logger->error('Error in Add to cart observer: ' . $e->getMessage());
@@ -55,7 +60,7 @@ class Add implements ObserverInterface
     }
 
     /**
-     * handle add to cart event for analytic tracking
+     * Handle add to cart event for analytic tracking
      *
      * @param integer $productId
      * @param string $productName

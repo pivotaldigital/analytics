@@ -2,21 +2,64 @@
 
 namespace Pivotal\Analytics\Helper;
 
+use Facebook\WebDriver\Cookie;
+use Magento\Framework\Filesystem\DriverInterface;
+use Magento\Framework\HTTP\ClientInterface;
+use Magento\Framework\Stdlib\CookieManagerInterface;
+use Pivotal\Analytics\Logger\Logger;
+
 class Data extends \Magento\Framework\App\Helper\AbstractHelper
 {
-    const XML_PATH_ENABLED = 'pivotal_analytics/general/enabled';
-    const XML_PATH_SITE_KEY = 'pivotal_analytics/general/site_key';
-    const XML_PATH_TRACK_ADD_CART = 'pivotal_analytics/general/track_add_cart';
-    const XML_PATH_TRACK_VIEW_CART = 'pivotal_analytics/general/track_view_cart';
-    const XML_PATH_TRACK_PURCHASE = 'pivotal_analytics/general/track_purchase';
-    const XML_PATH_TRACK_REFUND = 'pivotal_analytics/general/track_refund';
-    const XML_PATH_TRACK_CANCELLATION = 'pivotal_analytics/general/track_cancellation';
+    private const XML_PATH_ENABLED = 'pivotal_analytics/general/enabled';
+    private const XML_PATH_SITE_KEY = 'pivotal_analytics/general/site_key';
+    private const XML_PATH_TRACK_ADD_CART = 'pivotal_analytics/general/track_add_cart';
+    private const XML_PATH_TRACK_VIEW_CART = 'pivotal_analytics/general/track_view_cart';
+    private const XML_PATH_TRACK_PURCHASE = 'pivotal_analytics/general/track_purchase';
+    private const XML_PATH_TRACK_REFUND = 'pivotal_analytics/general/track_refund';
+    private const XML_PATH_TRACK_CANCELLATION = 'pivotal_analytics/general/track_cancellation';
 
-    const PIVOTAL_ANALYTICS_FUNCTION_IDENTIFIER = 'gkvutfqqebfflznekqat';
+    public const PIVOTAL_ANALYTICS_FUNCTION_IDENTIFIER = 'gkvutfqqebfflznekqat';
 
-    const PIVOTAL_ANALYTICS_API_URL = "https://".self::PIVOTAL_ANALYTICS_FUNCTION_IDENTIFIER.".supabase.co/functions/v1/server-track";
-    const PIVOTAL_ANALYTICS_COOKIE_VISITOR_ID = 'pv_id';
-    const PIVOTAL_ANALYTICS_COOKIE_SESSION_ID = 'ps_id';
+    private const PIVOTAL_ANALYTICS_API_URL =
+    "https://" . self::PIVOTAL_ANALYTICS_FUNCTION_IDENTIFIER . ".supabase.co/functions/v1/server-track";
+
+    private const PIVOTAL_ANALYTICS_COOKIE_VISITOR_ID = 'pv_id';
+    private const PIVOTAL_ANALYTICS_COOKIE_SESSION_ID = 'ps_id';
+
+    /**
+     * @var CookieManagerInterface
+     */
+    protected CookieManagerInterface $cookieManager;
+
+    /**
+     * @var ClientInterface
+     */
+    protected ClientInterface $httpClient;
+
+    /**
+     * @var Logger
+     */
+    protected Logger $logger;
+
+    /**
+     * Constructor
+     *
+     * @param \Magento\Framework\App\Helper\Context $context
+     * @param CookieManagerInterface $cookieManager
+     * @param ClientInterface $httpClient
+     * @param Logger $logger
+     */
+    public function __construct(
+        \Magento\Framework\App\Helper\Context $context,
+        CookieManagerInterface $cookieManager,
+        ClientInterface $httpClient,
+        Logger $logger
+    ) {
+        $this->cookieManager = $cookieManager;
+        $this->httpClient = $httpClient;
+        $this->logger = $logger;
+        parent::__construct($context);
+    }
 
     /**
      * Check if the Pivotal Analytics module is enabled
@@ -30,7 +73,7 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
             \Magento\Store\Model\ScopeInterface::SCOPE_STORE
         );
     }
-    
+
     /**
      * Get site key from configuration
      *
@@ -44,6 +87,11 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
         );
     }
 
+    /**
+     * Get function identifier
+     *
+     * @return string
+     */
     public function getFunctionIdentifier(): string
     {
         return self::PIVOTAL_ANALYTICS_FUNCTION_IDENTIFIER;
@@ -57,8 +105,8 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
     public function getSessionIds(): array
     {
         return [
-            'visitorId' => $_COOKIE[self::PIVOTAL_ANALYTICS_COOKIE_VISITOR_ID] ?? null,
-            'sessionId' => $_COOKIE[self::PIVOTAL_ANALYTICS_COOKIE_SESSION_ID] ?? null
+            'visitorId' => $this->cookieManager->getCookie(self::PIVOTAL_ANALYTICS_COOKIE_VISITOR_ID, null),
+            'sessionId' => $this->cookieManager->getCookie(self::PIVOTAL_ANALYTICS_COOKIE_SESSION_ID, null)
         ];
     }
 
@@ -70,26 +118,21 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
      */
     public function sendTrackingEvent(array $data): string|false
     {
-        if (!$this->isEnabled() || !($siteKey = $this->getSiteKey())) {
+        try {
+            if (!$this->isEnabled() || !($siteKey = $this->getSiteKey())) {
+                return false;
+            }
+
+            $data['siteKey'] = $siteKey;
+
+            $this->httpClient->addHeader('Content-Type', 'application/json');
+            $this->httpClient->post(self::PIVOTAL_ANALYTICS_API_URL, json_encode($data));
+
+            return $this->httpClient->getBody();
+        } catch (\Exception $e) {
+            $this->logger->error('Pivotal Analytics Tracking Error: ' . $e->getMessage());
             return false;
         }
-
-        $data['siteKey'] = $siteKey;
-
-        $options = [
-            'http' => [
-                'header' => "Content-Type: application/json\r\n",
-                'method' => 'POST',
-                'content' => json_encode($data)
-            ]
-        ];
-        
-        $context = stream_context_create($options);
-        return file_get_contents(
-            self::PIVOTAL_ANALYTICS_API_URL,
-            false,
-            $context
-        );
     }
 
     /**
@@ -99,7 +142,7 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
      */
     public function trackViewCartEvent(): int|false
     {
-        if(!$this->isEnabled() || !$this->getSiteKey()) {
+        if (!$this->isEnabled() || !$this->getSiteKey()) {
             return false;
         }
 
@@ -113,10 +156,10 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
      * Check if track add to cart event is enabled
      *
      * @return int|false
-     */    
+     */
     public function trackAddToCartEvent(): int|false
     {
-        if(!$this->isEnabled() || !$this->getSiteKey()) {
+        if (!$this->isEnabled() || !$this->getSiteKey()) {
             return false;
         }
 
@@ -133,8 +176,8 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
      */
     public function trackPurchaseEvent(): int|false
     {
-        if(!$this->isEnabled() || !$this->getSiteKey()) {
-            return false;   
+        if (!$this->isEnabled() || !$this->getSiteKey()) {
+            return false;
         }
 
         return (int) $this->scopeConfig->getValue(
@@ -147,10 +190,10 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
      * Check if track refund event is enabled
      *
      * @return int|false
-     */    
+     */
     public function trackRefundEvent(): bool
     {
-        if(!$this->isEnabled() || !$this->getSiteKey()) {
+        if (!$this->isEnabled() || !$this->getSiteKey()) {
             return false;
         }
 
@@ -164,10 +207,10 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
      * Check if track order cancellation event is enabled
      *
      * @return int|false
-     */    
+     */
     public function trackCancellationEvent(): bool
     {
-        if(!$this->isEnabled() || !$this->getSiteKey()) {
+        if (!$this->isEnabled() || !$this->getSiteKey()) {
             return false;
         }
 
@@ -177,4 +220,3 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
         );
     }
 }
-    

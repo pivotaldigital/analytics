@@ -32,7 +32,6 @@ class Refund implements ObserverInterface
         $this->logger = $logger;
     }
 
-
     /**
      * Execute observer
      *
@@ -83,8 +82,14 @@ class Refund implements ObserverInterface
      * @param string|null $originalPurchaseDate
      * @return void
      */
-    private function trackRefund($originalOrderId, $refundAmount, $refundReason, $refundType = 'partial', $refundedItems = [], $originalPurchaseDate = null)
-    {
+    private function trackRefund(
+        $originalOrderId,
+        $refundAmount,
+        $refundReason,
+        $refundType = 'partial',
+        $refundedItems = [],
+        $originalPurchaseDate = null
+    ) {
         $sessionIds = $this->helper->getSessionIds();
 
         $data = [
