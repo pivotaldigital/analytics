@@ -3,7 +3,20 @@
 # Pivotal Analytics Extension
 
 ## Overview
-The Pivotal Analytics extension for Magento 2 provides advanced analytics capabilities to enhance your e-commerce platform. This extension allows you to track user behavior, analyze sales data, and generate insightful reports to improve your business decisions.
+The Pivotal Analytics extension for Magento 2 provides advanced analytics capabilities to enhance your e-commerce platform. This extension allows you to track user behaviour, analyse sales order events, and generate insightful reports to improve your business decisions.
+
+The extension uses event observers to track configured user activities without affecting website's UI/UX. 
+
+Configuration is provided in admin area of the e-commerce store where site owners can enable/disable particular events to track. Currently the extension only provide option to track events server-side.
+
+The extension is under open-source licensing and its code can be customised by the store owner or their team.
+
+## Features
+- Add to cart event tracking
+- View cart activity tracking
+- Purchase event tracking
+- Refund order event tracking
+- Order cancellation event tracking
 
 ## Installation Instructions
 
@@ -12,7 +25,7 @@ The Pivotal Analytics extension for Magento 2 provides advanced analytics capabi
 #### Run below commands:
 
 ```
-composer require pivotal/analytics
+composer require pivotal/module-analytics-app
 ```
 
 ### Manual installation:
@@ -42,13 +55,6 @@ composer require pivotal/analytics
 
 ## Usage Guidelines
 After installation, you can configure the Pivotal Analytics extension from the Magento admin panel. Navigate to `Stores > Configuration > General > Pivotal Analytics` to set up your preferences.
-
-## Features
-- Add to cart event tracking
-- View cart activity tracking
-- Purchase event tracking
-- Refund order event tracking
-- Order cancellation event tracking
 
 ## Support
 For any issues or feature requests, please open an issue in the repository or contact our support team.

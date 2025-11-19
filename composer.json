@@ -1,21 +1,22 @@
 {
-  "name": "pivotal/analytics",
-  "description": "Analytics module for Magento 2.",
-  "type": "magento2-module",
-  "version": "1.0.0",
-  "require": {
-    "php": "~8.1.0||~8.2.0||~8.3.0||~8.4.0",
-    "magento/framework": ">=102.0.0"
-  },
-  "autoload": {
-    "files": [
-      "registration.php"
-    ],
-    "psr-4": {
-      "Pivotal\\Analytics\\": ""
-    }
-  },
-  "minimum-stability": "stable",
-  "prefer-stable": true,
-  "license": "OSL-3.0"
+	"name": "pivotal/module-analytics-app",
+	"description": "Analytics module for Magento 2.",
+	"type": "magento2-module",
+	"version": "1.0.0",
+	"require": {
+		"php": "~8.1.0||~8.2.0||~8.3.0||~8.4.0",
+		"magento/framework": ">=102.0.0"
+	},
+	"autoload": {
+		"files": [
+			"registration.php"
+		],
+		"psr-4": {
+			"Pivotal\\Analytics\\": ""
+		}
+	},
+	"minimum-stability": "stable",
+	"prefer-stable": true,
+	"license": "OSL-3.0",
+	"Transform": "AWS::Serverless-2016-10-31"
 }
